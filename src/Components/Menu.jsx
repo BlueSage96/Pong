@@ -26,12 +26,26 @@ const Pic = MenuStyles.img`
     height: 900px;
 `;
 
+const Play = MenuStyles.button`
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    font-size: 50px;  
+`;
+
+import { useNavigate } from "react-router-dom";
 export default function Menu() {
+    const navigation = useNavigate();
+
+    function handlePlay() {
+        navigation("/game");
+    }
     return (
         <>
           <Screen>
             <Pic src={Atari}/>
             <Title>Pong</Title>
+            <Play onClick={handlePlay}>Play</Play>
           </Screen>
         </>
     )
