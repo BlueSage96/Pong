@@ -6,7 +6,12 @@
     height: 100px;
 }
 
-.P1 {
+paddle {
+    width: 50px;
+    height: 100px;
+    color: white;
+}
+/* .P1 {
     background-color: blue;
     border: 2px solid white;
     border-radius: 2px;
@@ -36,4 +41,4 @@
     position: absolute;
     left: 900px;
     top: 400px;
-}
+} */
