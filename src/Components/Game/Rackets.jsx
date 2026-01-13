@@ -1,65 +1,68 @@
-// import PongStyle from "../../css/Pong.module.css";
-/*
-    To move a react-konva shape up and down with keyboard keys, you need to:
-    Make the Konva container focusable so it can receive keyboard events.
-    Attach a keydown event listener to the container.
-    Use React state to manage the shape's position.
-    Update the state based on the pressed keys (Up/Down arrows). 
-*/
 import { useState, useEffect, useRef } from "react";
 import { Rect, Layer, Stage} from "react-konva";
-export default function Rackets ({ isP1, setIsP1, isP2, setIsP2 }) {
-  // useStates: position:(optional) -> use setP1 and setP2 in keydown
-  const [position, setPosition] = useState({ x: 300, y: 300 });
 
-  //useRef: container ref
-  const posRef = useRef(null);
+const Rackets = () => {
+  const [positionP1, setPositionP1] = useState({ x: 300, y: 300 });
+  const [positionP2, setPositionP2] = useState({ x: 300, y: 300 });
 
-  //set a movement variable
-  const movement = 5;
+  const stageRef = useRef(null);
+  const containerRef = useRef(null);
+
+  const movement = 8;
+  let speed = 4;
 
   //Focus the container div when the component mounts or the stage is clicked
   useEffect(() => {
-    if (posRef.current) posRef.current.focus();
+    if (containerRef.current) containerRef.current.focus();
     //add cleanup function!
   },[]);
 
-  // functions for keyDown movement 
-const onKeyDown = (event) => {
-   const key = event.keyCode;
-   //switch case - need to assign keys for each racket (setP1 & setP2)!!
+  // functions for racket movement 
+const handleKeyDown = (event) => {
+   let key = event.key;
    switch (key) {
-      //up arrow
-      case 38: 
-        setPosition(prev => prev * movement); //state updater function - check notes
+      case "ArrowUp": 
+        setPositionP2((prev) => ({ ...prev, y: prev.y - movement * speed }));
         console.log("Up");
-        event.preventDefault();
+        break;
+      case "W":
+      case "w":
+         //state updater function
+        setPositionP1((prev) => ({ ...prev, y: prev.y - movement * speed }));
+        console.log("W or w");
         break;
       //down arrow
-      case 40:
-        setPosition(prev => prev * movement); //state updater function - check notes
+      case "ArrowDown":
+          setPositionP2((prev) => ({ ...prev, y: prev.y + movement * speed }))
         console.log("Down");
-        event.preventDefault();
         break;
-      //87 - w and 83 - s
+      case "S":
+      case "s":
+        setPositionP1((prev) => ({ ...prev, y: prev.y + movement * speed }))
+        console.log("S or s");
+        break;
+      default: 
+       return;
    }
    event.preventDefault();
 }
 
   //onClick function - focus!!
-  const focusPosRef = () => {
-      if (posRef.current) posRef.current.focus();
+  const focusStage = () => {
+      if (containerRef.current) containerRef.current.focus();
   }
   return (
     <>
-      <div onClick={focusPosRef} ref={posRef} onKeyDown={onKeyDown}>
+    {/* tabIndex is needed to make the key focusable */}
+      <div onClick={focusStage} ref={containerRef} onKeyDown={handleKeyDown} tabIndex={0}>
         {/* Might have to change later */}
-        <Stage width={window.innerWidth} height={window.innerHeight}>
+        <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
       <Layer>
         {/* original values: 1025 for red's x position, everything else was 300*/}
-        <Rect x={position.x} y={position.y} width={70} height={140} fill="blue" stroke="white" 
-        cornerRadius={6} />
-        <Rect x={position.x + 725} y={position.y} width={70} height={140} fill="red" stroke="white" cornerRadius={6}/>
+        <Rect x={positionP1.x} y={positionP1.y} width={70} height={140} fill="blue" stroke="white" 
+        cornerRadius={6} onKeyDown={positionP1}/>
+        <Rect x={positionP2.x + 725} y={positionP2.y} width={70} height={140} fill="red" stroke="white" 
+        cornerRadius={6} onKeyDown={positionP2} />
       </Layer>
     </Stage>
       </div>
@@ -67,3 +70,4 @@ const onKeyDown = (event) => {
     
   );
 }
+export default Rackets;
