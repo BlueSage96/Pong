@@ -25,7 +25,6 @@ export default function Board() {
     return(
         <>
           <BD>
-    
              <HR/>
           </BD>
         </>
